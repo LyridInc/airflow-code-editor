@@ -31,6 +31,7 @@ __all__ = ["appbuilder_view"]
 try:
     from airflow.www import auth
     from airflow.security import permissions
+    from airflow.api_connexion import security
 
     PERMISSIONS = [
         (permissions.ACTION_CAN_READ, permissions.RESOURCE_WEBSITE),
@@ -74,7 +75,8 @@ try:
             return self._format()
 
         @expose("/tree", methods=["GET"])
-        @auth.has_access(PERMISSIONS)
+        # @auth.has_access(PERMISSIONS)
+        @security.requires_access(PERMISSIONS)
         def tree_base(self, path=None):
             return self._tree(path, args=request.args)
 
